@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>who-join?</title>
+</head>
+<body>
+{% if who_list %}
+    <ul>
+        {% for who in who_list %}
+            <li><a href="/who/{{who.ID}}/">{{who.ID}}</a></li>
+        {% endfor %}
+    </ul>
+{% endif %}
+</body>
+</html>
