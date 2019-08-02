@@ -13,18 +13,29 @@ from django.utils import timezone
 #userID = models.ForeignKey(HantorismUser, on_delete = models.CASCADE)
 from common_hantorism.models import HantorismUser
 
-class HantorismLibrary(models.Model):
-    book_user = models.ForeignKey(HantorismUser, on_delete=models.CASCADE)
-    book_owner = models.ForeignKey(HantorismUser, on_delete=models.CASCADE)
-    book_name = models.CharField(max_length=200)
-    rent_date = models.DateTimeField(
-            default=timezone.now)
-
-    rental_status = models.BooleanField(default=False)
-
-    def publish(self):
-        self.rent_date = timezone.now()
-        self.save()
+class Book(models.Model):
+    book_name = models.CharField(max_length=20)
+    book_rent_state = models.BooleanField(default = False)
+    rent_date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return self.book_user
+        return self.book_name
+
+class BookOwner(models.Model):
+    book_owner_name = models.CharField(max_length=20)
+    book_owner = models.ForeignKey(HantorismUser, on_delete=models.CASCADE)
+
+    # def book_owner_(self):
+    #     self.book_owner = models.
+    #여기가 다른 모델에서 이름으로 찾아서 저장하는곳
+    def __str__(self):
+        return self.book_owner_name
+class BookUser(models.Model):
+    book_user_name = models.CharField(max_length=20)
+    book_user = models.ForeignKey(HantorismUser, on_delete=models.CASCADE)
+    # def book_user_(self):
+    #     self.book_owner = models.
+    # 여기가 다른 모델에서 이름으로 찾아서 저장하는곳2
+
+    def __str__(self):
+        return self.book_user_name
