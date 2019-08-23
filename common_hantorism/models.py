@@ -56,6 +56,7 @@ class HantorismRentBook(models.Model):
     date = models.DateTimeField(default=timezone.now)
     user_info = models.ForeignKey(HantorismUser, on_delete=models.CASCADE)
     book = models.ForeignKey(HantorismBook, on_delete=models.CASCADE)
+    is_admine = models.BooleanField(default=False)
 
     def rent(self):
         self.book.state = True

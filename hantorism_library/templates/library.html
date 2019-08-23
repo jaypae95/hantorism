@@ -21,9 +21,13 @@
                     </td>
                     <td> {{book.owner}} </td>
                     {% if book.state %}
-                        {% for return_book in return_books %}
-                            {% if book.id == return_book.book.id %}
-                                <td>대여자 : {{return_book.user_info.name}}</td>
+                        {% for rent_book in rent_books %}
+                            {% if book.id == rent_book.book.id %}
+                                {% if rent_book.is_admine %}
+                                    <td>대여자 : {{rent_book.user_info.name}}</td>
+                                {% else %}
+                                    <td>관리자 확인중 - 대여요청</td>
+                                {% endif %}
                             {% endif %}
                         {% endfor %}
                     {% else %}
@@ -33,9 +37,15 @@
                 <tr id="d{{book.id}}" class="collapse">
                     <td colspan="3" class="hiddenRow text-center">
                         {% if book.state %}
-                            <form action="/book_return/{{book.id}}/" method="POST">{% csrf_token %}
-                                <button class="btn btn-warning" >반납요청</button>
-                            </form>
+                            {% for rent_book in rent_books %}
+                                {% if book.id == rent_book.book.id %}
+                                    {% if rent_book.is_admine  %}
+                                        <form action="/book_return/{{book.id}}/" method="POST">{% csrf_token %}
+                                            <button class="btn btn-warning" >반납요청</button>
+                                        </form>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
                         {% else %}
                             <form action="/book_rent/{{book.id}}/" method="POST">{% csrf_token %}
                                 <button name="rent" class="btn btn-warning" >대여요청</button>

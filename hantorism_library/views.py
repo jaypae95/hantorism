@@ -19,10 +19,11 @@ def book_rent(request, book_id):
     book = HantorismBook.objects.get(id=book_id)
     current_user = HantorismUser.objects.get(user=request.user)
     time = timezone.now()
+    admine = False
     if request.method == "POST":
         book.state = True
         book.save()
-        rent_book = HantorismRentBook(date=time, user_info=current_user, book=book)
+        rent_book = HantorismRentBook(date=time, user_info=current_user, book=book, is_admine=admine)
         rent_book.save()
         return redirect('/../../library/')
 
@@ -30,6 +31,6 @@ def book_rent(request, book_id):
 @login_required()
 def library(request):
     books = HantorismBook.objects.all()
-    return_books = HantorismRentBook.objects.all()
-    context = {'books': books, 'return_books': return_books}
+    rent_books = HantorismRentBook.objects.all()
+    context = {'books': books, 'rent_books': rent_books}
     return render(request, 'library.html', context)
