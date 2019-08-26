@@ -21,7 +21,7 @@ class HantorismUser(models.Model):
 
 
 class HantorismPost(models.Model):
-    user = models.ForeignKey(HantorismUser, on_delete=models.CASCADE)
+    user_info = models.ForeignKey(HantorismUser, on_delete=models.CASCADE)
 
     name=models.CharField(max_length=10)
     title = models.CharField(max_length=200)
@@ -48,12 +48,12 @@ class HantorismBook(models.Model):
 
 class HantorismRentBook(models.Model):
     date = models.DateTimeField(default=timezone.now)
-    user = models.ForeignKey(HantorismUser, on_delete=models.CASCADE)
+    user_info = models.ForeignKey(HantorismUser, on_delete=models.CASCADE)
     book = models.ForeignKey(HantorismBook, on_delete=models.CASCADE)
 
     def rent(self):
         self.book.state = True
-        self.user = models.ForeignKey(HantorismUser, on_delete=models.CASCADE)
+        self.user_info = models.ForeignKey(HantorismUser, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.book.title

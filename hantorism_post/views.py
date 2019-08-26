@@ -1,6 +1,6 @@
 from common_hantorism.models import HantorismPost, HantorismUser
 from rest_framework import viewsets
-from django.shortcuts import render, render_to_response,redirect
+from django.shortcuts import render,redirect
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
@@ -13,7 +13,7 @@ class ViewSet(viewsets.ModelViewSet):
         posts = HantorismPost.objects.order_by('-created_date')[(cur-1)*10:cur*10]
         totalCnt=HantorismPost.objects.all().count()
 
-        pagingHelperIns = pagingHelper();
+        pagingHelperIns = pagingHelper()
         total_page_list = pagingHelperIns.getTotalPageList(totalCnt,rowsPerPage)
         return render(request, 'post_list.html', {'post_list':posts,
                                                               'totalCnt':totalCnt,
@@ -41,12 +41,12 @@ class pagingHelper:
         self.total_page_list=0
 
 def postWrite(request):
-    return render_to_response('post_write.html')
+    return render(request,'post_write.html')
 
 @csrf_exempt
 @login_required
 def doPost(request):
-    p=HantorismPost(user_id=request.user.id,
+    p=HantorismPost(user_info_id=request.user.id,
                     name=request.user.username,
                     title=request.POST['title'],
                     body=request.POST['body'])

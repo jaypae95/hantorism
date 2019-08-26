@@ -24,7 +24,7 @@ def book_rent(request, book_id):
     if request.method == "POST":
         book.state = True;
         book.save()
-        book = HantorismRentBook(date=time, user=current_user, book=book)
+        book = HantorismRentBook(date=time, user_info=current_user, book=book)
         book.save()
         return redirect('/../../library/')
 

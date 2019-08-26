@@ -4,7 +4,9 @@ from django.shortcuts import render, redirect
 from django.contrib import auth
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from django.utils import timezone
+from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
 
 
 class SignUpViewSet(viewsets.ModelViewSet):
@@ -12,25 +14,25 @@ class SignUpViewSet(viewsets.ModelViewSet):
         return render(request, 'sign_up.html')
 
     def signUp(self, request):
-        user = User.objects.create_user(
-            username=request.POST['username'],
-            password=request.POST['password'])
-
-        hantorism_user = HantorismUser(
-            user=user,
-            name=request.POST['name'],
-            student_number=request.POST['student_number'],
-            major=request.POST['major'],
-
-            gender=request.POST['gender'],
-            email=request.POST['email'],
-            isHantor=request.data['is_hantor'])
         try:
+            user = User.objects.create_user(
+                username=request.POST['username'],
+                password=request.POST['password'])
+            hantorism_user = HantorismUser(
+                user=user,
+                name=request.POST['name'],
+                student_number=request.POST['student_number'],
+                major=request.POST['major'],
+                gender=request.POST['gender'],
+                email=request.POST['email'],
+                is_hantor=request.data['is_hantor'])
             hantorism_user.save()
             auth.login(request, user)
             return redirect('list')
         except Exception as ex:
-            print(ex)
+            messages.error(request,"ID 중복")
+            return render(request,"sign_up.html")
+
 
 
 class SignInViewSet(viewsets.ModelViewSet):
@@ -66,3 +68,26 @@ def userDetail(request, name):
 def signOut(request):
     auth.logout(request)
     return redirect('list')
+
+@login_required
+def myPage(request):
+    user_detail = HantorismUser.objects.get(user_id=request.user.id)
+    context = {'user_detail': user_detail,
+               'change':2}
+    return render(request, 'my_page.html', context)
+
+@login_required
+def changePW(request):
+    user=request.user
+    password_form=PasswordChangeForm(user,request.POST)
+    user_detail = HantorismUser.objects.get(user_id=request.user.id)
+    context = {'user_detail': user_detail,
+               'change':2}
+    if password_form.is_valid():
+        password_form.save()
+        update_session_auth_hash(request,password_form.user)
+        context['change']=1
+        return render(request,'my_page.html',context)
+    else:
+        context['change']=0
+        return render(request,'my_page.html',context)
