@@ -28,14 +28,21 @@
 
             let reg_alpa_Exp = /[A-Za-z]/;
             let reg_num_Exp = /[0-9]/;
+            let reg_sig_Exp = /[~!@#$%^&*()_+|<>?:{}]/;
             let pw1 = form.password.value;
-            let pw2 = form.password.value;
+            let pw2 = form.password2.value;
             if (pw1.length < 8 || !reg_alpa_Exp.test(pw1) || !reg_num_Exp.test(pw1)) {
                 alert("비밀번호는 8자리 이상, 영문자, 숫자를 섞어 주세요.");
                 return false;
             }
             if (pw1 != pw2) {
                 alert("비밀번호를 확인하세요");
+                return false;
+            }
+            let numb=form.student_number;
+            if(reg_alpa_Exp.test(numb.value) || reg_sig_Exp.test(numb.value) || numb.value.length != 9){
+                alert("학번은 숫자만 9자리 입력해주세요.");
+                numb.focus();
                 return false;
             }
             if (form.chkOk.checked == false) {
